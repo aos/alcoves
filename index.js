@@ -28,7 +28,7 @@ const scrapeImgUrls = async () => {
 const downloadImg = async (options = {}) => {
   try {
     const { filename, image } = await download.image(options);
-    console.log('⬇️  ', path.basename(filename)); // => /path/to/dest/image.jpg
+    console.log('⬇️  ', path.basename(filename)); // => image.jpg
   }
   catch (e) {
     throw e;
@@ -43,7 +43,7 @@ const downloadAll = async () => {
       url: file,
       dest: '../../../../Pictures/covers'
     });
-  }))
+  }));
   console.log(`👌  Done -- downloaded \x1b[36m${imgs.length}\x1b[0m album covers!`);
 }
 
