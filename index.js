@@ -2,8 +2,12 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const download = require('image-downloader');
 
+// Relative path to directory to download images
+const IMAGE_DIRECTORY = '../../../Pictures/covers';
+
 const scrapeImgUrls = async () => {
   console.log('🚀  Launching...');
+  // Launches puppeteer and goes to URL
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -12,14 +16,18 @@ const scrapeImgUrls = async () => {
 
   console.log('⛏  Scraping image URLs...');
   const results = await page.evaluate(() => {
-    const imageLinks = [];
-    const elements = document.querySelectorAll('.content > .spacer > #siteTable > .thing');
-    for (const el of elements) {
-      if (el.dataset.url.search(/(.jpg)|(.png)/) >= 0) {
-        imageLinks.push(el.dataset.url);
-      }
-    }
-    return imageLinks;
+    // Grabs all <divs> of images
+    const elements = document
+          .querySelectorAll('.content > .spacer > #siteTable > .thing');
+    /* 
+     * Spreads elements into an array to filter, then creates a new array of
+     * only the URLs
+     * You can customize this to add another filter below the first if 
+     * looking for more specific criteria -- refer to blog post
+    */
+    return [...elements]
+           .filter(el => el.dataset.url.search(/(.jpg)|(.png)/) >= 0)
+           .map(el => el.dataset.url)
   });
   browser.close();
   return results;
@@ -41,7 +49,7 @@ const downloadAll = async () => {
   await Promise.all(imgs.map(async (file) => {
     await downloadImg({
       url: file,
-      dest: '../../../../Pictures/covers'
+      dest: IMAGE_DIRECTORY 
     });
   }));
   console.log(`👌  Done -- downloaded \x1b[36m${imgs.length}\x1b[0m album covers!`);
