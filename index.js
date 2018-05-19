@@ -12,7 +12,7 @@ const scrapeImgUrls = async () => {
   const page = await browser.newPage();
 
   console.log('🌎  Visiting web page...');
-  await page.goto('https://www.reddit.com/r/fakealbumcovers/');
+  await page.goto('https://old.reddit.com/r/fakealbumcovers/');
 
   console.log('⛏  Scraping image URLs...');
   const results = await page.evaluate(() => {
