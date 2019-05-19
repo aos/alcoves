@@ -3,13 +3,20 @@ const puppeteer = require('puppeteer');
 const download = require('image-downloader');
 
 // Relative path to directory to download images
-const IMAGE_DIRECTORY = '../../../Pictures/covers';
+const IMAGE_DIRECTORY = './images';
+
+const puppeteerOptions = {};
+if (process.env.USING_DOCKERFILE) {
+  console.log('--- Running inside docker ---');
+  puppeteerOptions.args = ['--disable-dev-shm-usage'],
+  puppeteerOptions.executablePath = '/usr/bin/chromium-browser'
+}
 
 const scrapeImgUrls = async () => {
   try {
     console.log('🚀  Launching...');
     // Launches puppeteer and goes to URL
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch(puppeteerOptions);
     const page = await browser.newPage();
 
     console.log('🌎  Visiting web page...');
